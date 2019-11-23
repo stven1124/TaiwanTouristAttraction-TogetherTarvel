@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta property="og:title" content="台灣旅遊景點 | 一起去旅行吧!" />
+    <meta property="og:description" content="純手刻RWD+JSON作業" />
+    <meta property="og:site_name" content="一起去旅行吧！" />
+    <meta property="og:locale" content="zh_TW" />
+    <link rel="icon" href="images/webLogo/favicon.ico">
+    <link rel="stylesheet" href="css/all.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css"
+        integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+    <title>台灣旅遊景點 | 一起去旅行吧！</title>
+  </head>
+  <body>
+    <div class="wrap">
+        <div class="loader fa-5x">
+          <i class="fas fa-spinner fa-pulse"></i>
+        </div>
+      <header class="header">
+        <div class="title">
+          <h1><a href="index.html" class="logo-title" alt="台灣Logo"><p>台灣旅遊景點 | 一起去旅行吧!</p></a></h1>
+        </div>
+        <div class="nav">
+          <ul>
+            <li><p>區域:</p><select name:area size:5 class="selectorArea"></select></li>
+            <li><p>縣市:</p><select name:city size:5 class="selectorCity"></select></li>            
+          </ul>
+        </div>
+      </header>
+      <aside class="aside">
+        <div class="asideImage bg-cover" style=" background-image: url(images/touristAttraction/Taipei.jpg);">
+        </div>
+      </aside>
+      <section class="content">
+        <ul class="areaList">
+        </ul>
+        <div class="pageBtn">
+          <nav aria-label="Page navigation example">
+            <ul class="pagination" id="pageid"></ul>
+          </nav>
+        </div>
+      </section>
+      <footer class="footer">
+        <h4>© 2019 一起去旅行吧！* 僅供作業使用</h4>
+        <p>資料來源：交通部觀光局</p>
+      </footer>
+    </div>
+    <script src="js/all.js"></script>
+  </body>
+</html>
