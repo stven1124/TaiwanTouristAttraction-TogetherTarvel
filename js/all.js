@@ -1,10 +1,11 @@
 const URL = 'https://cors-anywhere.herokuapp.com/https://gis.taiwan.net.tw/XMLReleaseALL_public/scenic_spot_C_f.json';
-var areaList = document.querySelector('.areaList');
+const areaList = document.querySelector('.areaList');
 const pageID = document.getElementById("pageid");
-var aside = document.querySelector('.aside');
-var selectorCity = document.querySelector('.selectorCity');
-var selectorArea = document.querySelector('.selectorArea');
-var loader = document.querySelector(".loader");
+const aside = document.querySelector('.aside');
+const selectorCity = document.querySelector('.selectorCity');
+const selectorArea = document.querySelector('.selectorArea');
+var  loader = document.querySelector(".loader");
+let jsonData = {};
 
 fetch(URL,{method:'GET'})
 .then(response => {
@@ -17,120 +18,115 @@ fetch(URL,{method:'GET'})
       }
     }
     jsonData = jsonData.filter(function(e){return e});
-    updateSelectorCity(jsonData);
-    pagination(jsonData, 1);
+    paginationArrayDefault(jsonData)
 }).then(() => {
   loader.style.display = "none";
 });;
 
+/* Pagination 分頁 */
 
-/* Pagination 換頁 */
+var SelectorCityList= [];
 
-function pagination(jsonData, nowPage) {
-  const dataTotal = jsonData.length;
-  const perPage = 12;
-  const totalPage = Math.ceil(dataTotal / perPage);
-  let currentPage = nowPage;
-  if (currentPage > totalPage) {
-    currentPage = totalPage;
+function paginationArrayDefault(jsonData) {
+  const jsonDataLen = jsonData.length;
+  var selector = '臺北市';
+  SelectorCityList.length = 0;
+  for(let i = 0;i < jsonDataLen; i++){
+    if(selector == jsonData[i].Region){
+      SelectorCityList.push(jsonData[i]);
+    }
   }
+  pagination(SelectorCityList, 1)
+};
+
+function paginationArray(e) {
+  const jsonDataLen = jsonData.length;
+  var selector = e.target.value;
+  SelectorCityList.length = 0;
+  for(let i = 0;i < jsonDataLen; i++){
+    if(selector == jsonData[i].Region || selector == jsonData[i].Town){
+      SelectorCityList.push(jsonData[i]);
+    }
+  }
+  pagination(SelectorCityList, 1)
+};
+
+function pagination(SelectorCityList,nowPage) {
+  loader.style.display = "none";
+  const perPage = 12;
+  let currentPage = nowPage;
   const minData = currentPage * perPage - perPage + 1;
   const maxData = currentPage * perPage;
   const data = [];
-  jsonData.forEach((item, index) => {
+  SelectorCityList.forEach((item, index) => {
     const num = index + 1;
     if (num >= minData && num <= maxData) {
       data.push(item);
     }
   });
+  const totalPage = Math.ceil(SelectorCityList.length / perPage);
+  if (currentPage > totalPage) {
+    currentPage = totalPage;
+  }
   const page = {
     totalPage,
     currentPage,
   };
   pageBtn(page);
-  updateListDefault(data);
+  updateList(data);
 }
 
+/* Pagination 分頁按鈕 */
+
 function pageBtn(page) {
-  var strr='';
-  var strrr='';
-  var str = `<li class="page-item page-active" data-page="${parseInt(page.currentPage)}">${parseInt(page.currentPage)}</li>`;
   const total = page.totalPage;
+  var firstStr = `<li class="page-item page-first" data-page="1">
+                  <i class="fas fa-angle-double-left" data-page="1"></i></li>`;
+  var preStr = `<li class="page-item page-pre" data-page="${parseInt(page.currentPage) -1}">
+                <i class="fas fa-angle-left" data-page="${parseInt(page.currentPage) -1}"></i></li>`;
+  var strr='';
+  var str = `<li class="page-item page-active" data-page="${parseInt(page.currentPage)}">${parseInt(page.currentPage)}</li>`;
+  var strrr='';
+  var nextStr= `<li class="page-item" data-page="${parseInt(page.currentPage)}">
+                <i class="fas fa-angle-right" data-page="${parseInt(page.currentPage)}"></i></li>`;
+  var lastStr = `<li class="page-item page-last" data-page="${total}">
+                 <i class="fas fa-angle-double-right" data-page="${total}"></i></li>`;
   if (parseInt(page.currentPage) < 1) {
     parseInt(page.currentPage) = 1
   };
-  preStr = `<li class="page-item page-pre" data-page="${parseInt(page.currentPage) -1}">
-  <i class="fas fa-caret-left" data-page="${parseInt(page.currentPage) -1}"></i>
-</li>`;
-  nextStr = `<li class="page-item page-next" data-page="${parseInt(page.currentPage) +1}">
-  <i class="fas fa-caret-right" data-page="${parseInt(page.currentPage) +1}"></i>
-</li>`;
-  for(var i=3; i>=1; i--) {
+  if (parseInt(page.currentPage) <= total - 1) {
+    nextStr = `<li class="page-item" data-page="${parseInt(page.currentPage) +1}">
+               <i class="fas fa-angle-right" data-page="${parseInt(page.currentPage) +1}"></i></li>`;
+  };
+  for(var i=2; i>=1; i--) {
     if(parseInt(page.currentPage) - i > 1) {
         strr += `<li class="page-item" data-page="${parseInt(page.currentPage) -i}">${parseInt(page.currentPage) -i}</li>`;
     }
   }
-  for(var i=1; i<=3; i++) {
-    if(parseInt(page.currentPage) + i < total) {
+  for(var i=1; i<=2; i++) {
+    if(parseInt(page.currentPage) + i <= total) {
         strrr += `<li class="page-item" data-page="${parseInt(page.currentPage) +i}">${parseInt(page.currentPage) +i}</li>`
     }
   }
-  pageID.innerHTML = preStr+strr+str+strrr+nextStr;
+  pageID.innerHTML = firstStr+preStr+strr+str+strrr+nextStr+lastStr;
 }
+
+/* Pagination 偵測有無換頁 */
 
 function switchPage(e) {
   e.preventDefault();
   const page = e.target.dataset.page;
-  pagination(jsonData, page);
+  pagination(SelectorCityList, page);
 }
 
 pageID.addEventListener("click", switchPage);
 
-/* 列表更新 */
+/* 區域選單更新 */
 
-function updateListDefault(data) {
-  let str = '';
-  data.forEach(item => {
-        str += `<li>
-        <iframe src="https://maps.google.com.tw/maps?f=q&hl=zh-TW&geocode=&q=${item.Py},${item.Px}&z=16&output=embed&t=" max-width="100%" height="155" style="border: 4px solid #FFFFFF;" allowfullscreen=""></iframe>
-        <ul class="areaListBottom">
-          <h5>${item.Name}<p class="area">${item.Town}</p></h5>
-          <li class="openTime">
-            <img src="images/webLogo/icons_clock.png"><span > ${item.Opentime || '未公佈開放時間' } </sapn>
-          </li>
-          <li class="address">
-            <img src="images/webLogo/icons_pin.png"><span> ${item.Add || '未公佈地址'} </span>
-          </li>
-          <li class="telephone">
-            <img src="images/webLogo/icons_phone.png"><span> ${item.Tel || '未公佈業者電話'} </span>
-            <div class="freeVisit">
-              <img src="images/webLogo/icons_tag.png"><span> ${item.Ticketinfo || '未公佈收費方式'} </span>
-            </div>
-          </li>
-        </ul>
-        </li>`;
-  });
-areaList.innerHTML = str ;
-};
-
-function updateSelectorCity() {
-  let titleStr = `<option selected="selected" disabled="disabled">- - 請選擇縣市- -</option>`;
-  let selectorCityStr = '';
-  const set = new Set();
-  const selectorCityArray = jsonData.filter(item => !set.has(item.Region) ? set.add(item.Region): false);
-    for(let i = 0;i < selectorCityArray.length; i++){
-        selectorCityStr += `<option value="${selectorCityArray[i].Region}">${selectorCityArray[i].Region}</option>`;
-    }
-selectorCity.innerHTML = titleStr + selectorCityStr;  
-}
-
-function updateSelector(e) {
-  pageid.style.display = "none";
+function updateSelectorArea(e) {
   var selector = e.target.value;
   let titleStr = `<option selected="selected" disabled="disabled">- - 請選擇區域- -</option>`;
   let selectorAreaStr = '';
-  let str = '';
-  let emptyStr= '';
   const set = new Set();
   const selectorAreaArray = jsonData.filter(item => !set.has(item.Town) ? set.add(item.Town): false);
   for(let i = 0;i < selectorAreaArray.length; i++){
@@ -141,44 +137,41 @@ function updateSelector(e) {
 selectorArea.innerHTML = titleStr + selectorAreaStr;
 };
 
-function updateList(e) {
-  var selector = e.target.value;
-  const jsonDataLen = jsonData.length;
+/* 列表更新 */
+
+function updateList(data) {
   let str = '';
-  let emptyStr= '';
-  for(let i = 0;i < jsonDataLen; i++){
-    if(selector == jsonData[i].Town){
-        str += `<li>
-        <iframe src="https://maps.google.com.tw/maps?f=q&hl=zh-TW&geocode=&q=${jsonData[i].Py},${jsonData[i].Px}&z=16&output=embed&t=" max-width="100%" height="155" style="border: 4px solid #FFFFFF;" allowfullscreen=""></iframe>
-        <ul class="areaListBottom">
-          <h5>${jsonData[i].Name}<p class="area">${jsonData[i].Town}</p></h5>
-          <li class="openTime">
-            <img src="images/webLogo/icons_clock.png"><span > ${jsonData[i].Opentime || '未公佈開放時間' } </sapn>
-          </li>
-          <li class="address">
-            <img src="images/webLogo/icons_pin.png"><span> ${jsonData[i].Add || '未公佈地址'} </span>
-          </li>
-          <li class="telephone">
-            <img src="images/webLogo/icons_phone.png"><span> ${jsonData[i].Tel || '未公佈業者電話'} </span>
-            <div class="freeVisit">
-              <img src="images/webLogo/icons_tag.png"><span> ${jsonData[i].Ticketinfo || '未公佈收費方式'} </span>
-            </div>
-          </li>
-        </ul>
-        </li>`;
-      if ( 1==1){
-        emptyStr = `<li class="itemempty"></li><li class="itemempty"></li><li class="itemempty"></li>`;
-      }
-    }
-  }
+  let emptyStr= `<li class="itemempty"></li><li class="itemempty"></li><li class="itemempty"></li>`;
+  data.forEach(item => {    
+  // <iframe src="https://maps.google.com.tw/maps?f=q&hl=zh-TW&geocode=&q=${item.Py},${item.Px}&z=16&output=embed&t=" max-width="100%" height="155" style="border: 4px solid #FFFFFF;" allowfullscreen=""></iframe>
+    str += `<li>
+    
+              <ul class="areaListBottom">
+                <h5>${item.Name}<p class="area">${item.Town}</p></h5>
+                <li class="openTime">
+                  <img src="images/webLogo/icons_clock.png"><span > ${item.Opentime || '未公佈開放時間' } </sapn>
+                </li>
+                <li class="address">
+                  <img src="images/webLogo/icons_pin.png"><span> ${item.Add || '未公佈地址'} </span>
+                </li>
+                <li class="telephone">
+                  <img src="images/webLogo/icons_phone.png"><span> ${item.Tel || '未公佈業者電話'} </span>
+                  <div class="freeVisit">
+                    <img src="images/webLogo/icons_tag.png"><span> ${item.Ticketinfo || '未公佈收費方式'} </span>
+                  </div>
+                </li>
+              </ul>
+            </li>`;
+  });
 areaList.innerHTML = str + emptyStr;
 };
+
+/* 圖片更新 */
 
 function updateImage(e) {
   var selector = e.target.value;
   let str='';
   let titleTextStr='';
-  console.log(e)
   switch (selector) {
   case "桃園市" :
     str = `<div class="asideImage bg-cover" style=" background-image: url(images/touristAttraction/Taoyuan.jpg);">
@@ -273,15 +266,12 @@ function updateImage(e) {
       </div>`
       break;
   };
-  for(let i = 0; i < jsonData.length; i++) {
-    if (selector == jsonData[i].Region) {
-      titleTextStr = `<div class="titleText"><p>${jsonData[i].Region}</p></div>`;
-    }
-  }
+  titleTextStr = `<div class="titleText"><p>${selector}</p></div>`;
   aside.innerHTML = str + titleTextStr ;
 };
 
 
-selectorCity.addEventListener('change',updateSelector,false)
+selectorCity.addEventListener('change',updateSelectorArea,false)
 selectorCity.addEventListener('change',updateImage,false)
-selectorArea.addEventListener('change',updateList,false)
+selectorCity.addEventListener('change',paginationArray,false)
+selectorArea.addEventListener('change',paginationArray,false)
