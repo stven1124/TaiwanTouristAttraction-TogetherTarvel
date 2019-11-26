@@ -143,9 +143,8 @@ function updateList(data) {
   let str = '';
   let emptyStr= `<li class="itemempty"></li><li class="itemempty"></li><li class="itemempty"></li>`;
   data.forEach(item => {    
-  // <iframe src="https://maps.google.com.tw/maps?f=q&hl=zh-TW&geocode=&q=${item.Py},${item.Px}&z=16&output=embed&t=" max-width="100%" height="155" style="border: 4px solid #FFFFFF;" allowfullscreen=""></iframe>
     str += `<li>
-    
+              <iframe src="https://maps.google.com.tw/maps?f=q&hl=zh-TW&geocode=&q=${item.Py},${item.Px}&z=16&output=embed&t=" max-width="100%" height="155" style="border: 4px solid #FFFFFF;" allowfullscreen=""></iframe>
               <ul class="areaListBottom">
                 <h5>${item.Name}<p class="area">${item.Town}</p></h5>
                 <li class="openTime">
