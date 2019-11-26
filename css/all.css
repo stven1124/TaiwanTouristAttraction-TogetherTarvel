@@ -180,7 +180,7 @@ img {
 
 @media screen and (max-width:915px) {
   .title {
-    float: none;
+    clear: none;
   }
 
   .nav {
@@ -211,6 +211,29 @@ img {
   }
 }  
 
+@media screen and (max-width:414px) {
+  .header	{
+    position: static;
+  }
+
+  .nav ul {
+    background-color: #f4f4f4;
+  }
+
+  .nav ul p {
+    font-size: 20px;
+    color: #444444;
+  }
+
+  .nav ul li select {
+    width:220px;
+    height:40px;
+    border: 2px solid #444444;
+    font-size: 16px;
+    text-align:center;
+    text-align-last: center;
+  }
+}
 
 /* 左邊景點圖片 */
 
@@ -306,6 +329,12 @@ img {
   }
 }
 
+@media screen and (max-width:414px) {
+  .content {
+    padding-top: 200px;
+  }
+}
+
 .areaList>li{
   margin-bottom: 36px;
 }
@@ -356,6 +385,8 @@ img {
   margin-right:11px;
 }
 
+/* Pagination 分頁按鈕 */
+
 .pageBtn {
   display: flex;
   justify-content: center;
@@ -393,6 +424,15 @@ img {
 .page-last{
   border-top-right-radius:25% ;
   border-bottom-right-radius:25% ;
+}
+
+@media screen and (max-width:414px) {
+  .page-item {
+    color: black;
+    padding: 5px 10px;
+    text-decoration: none;
+    border:1px solid #666666;
+  }
 }
 
 /* footer 底部 */
