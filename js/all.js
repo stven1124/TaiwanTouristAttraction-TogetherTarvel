@@ -25,46 +25,56 @@ fetch(URL,{method:'GET'})
 
 /* Pagination 分頁 */
 
-var SelectorCityList= [];
+var SelectorList= [];
 
 function paginationArrayDefault(jsonData) {
   const jsonDataLen = jsonData.length;
   var selector = '臺北市';
-  SelectorCityList.length = 0;
+  SelectorList.length = 0;
   for(let i = 0;i < jsonDataLen; i++){
     if(selector == jsonData[i].Region){
-      SelectorCityList.push(jsonData[i]);
+      SelectorList.push(jsonData[i]);
     }
   }
-  pagination(SelectorCityList, 1)
+  pagination(SelectorList, 1)
 };
 
-function paginationArray(e) {
+function paginationArrayCity(e) {
   const jsonDataLen = jsonData.length;
-  var selector = e.target.value;
-  SelectorCityList.length = 0;
+  SelectorList.length = 0;
   for(let i = 0;i < jsonDataLen; i++){
-    if(selector == jsonData[i].Region || selector == jsonData[i].Town){
-      SelectorCityList.push(jsonData[i]);
+    if(selectorCity.value == jsonData[i].Region){
+      SelectorList.push(jsonData[i]);
     }
   }
-  pagination(SelectorCityList, 1)
+  pagination(SelectorList, 1)
 };
 
-function pagination(SelectorCityList,nowPage) {
+function paginationArrayArea(e) {
+  const jsonDataLen = jsonData.length;
+  SelectorList.length = 0;
+  for(let i = 0;i < jsonDataLen; i++){
+    if(selectorCity.value == jsonData[i].Region && selectorArea.value == jsonData[i].Town){
+      SelectorList.push(jsonData[i]);
+    }
+  }
+  pagination(SelectorList, 1)
+};
+
+function pagination(SelectorList,nowPage) {
   loader.style.display = "none";
   const perPage = 12;
   let currentPage = nowPage;
   const minData = currentPage * perPage - perPage + 1;
   const maxData = currentPage * perPage;
   const data = [];
-  SelectorCityList.forEach((item, index) => {
+  SelectorList.forEach((item, index) => {
     const num = index + 1;
     if (num >= minData && num <= maxData) {
       data.push(item);
     }
   });
-  const totalPage = Math.ceil(SelectorCityList.length / perPage);
+  const totalPage = Math.ceil(SelectorList.length / perPage);
   if (currentPage > totalPage) {
     currentPage = totalPage;
   }
@@ -116,7 +126,7 @@ function pageBtn(page) {
 function switchPage(e) {
   e.preventDefault();
   const page = e.target.dataset.page;
-  pagination(SelectorCityList, page);
+  pagination(SelectorList, page);
 }
 
 pageID.addEventListener("click", switchPage);
@@ -142,7 +152,7 @@ selectorArea.innerHTML = titleStr + selectorAreaStr;
 function updateList(data) {
   let str = '';
   let emptyStr= `<li class="itemempty"></li><li class="itemempty"></li><li class="itemempty"></li>`;
-  data.forEach(item => {    
+  data.forEach(item => {
     str += `<li>
               <iframe src="https://maps.google.com.tw/maps?f=q&hl=zh-TW&geocode=&q=${item.Py},${item.Px}&z=16&output=embed&t=" max-width="100%" height="155" style="border: 4px solid #FFFFFF;" allowfullscreen=""></iframe>
               <ul class="areaListBottom">
@@ -272,5 +282,5 @@ function updateImage(e) {
 
 selectorCity.addEventListener('change',updateSelectorArea,false)
 selectorCity.addEventListener('change',updateImage,false)
-selectorCity.addEventListener('change',paginationArray,false)
-selectorArea.addEventListener('change',paginationArray,false)
+selectorCity.addEventListener('change',paginationArrayCity,false)
+selectorArea.addEventListener('change',paginationArrayArea,false)
