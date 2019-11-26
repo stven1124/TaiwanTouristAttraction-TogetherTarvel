@@ -60,7 +60,6 @@ img {
 
 .wrap {
   font-family: 微軟正黑體;
-  position: relative;
 }
 
 .loader {
@@ -219,7 +218,7 @@ img {
   position: fixed;
   z-index: -9999;
   width: 40%;
-  height: 1080px;
+  height: 100%;
 }
 
 .titleText {
@@ -258,7 +257,7 @@ img {
   float: right;
   width:60%;
   padding-top: 90px;
-  margin-bottom: 30px;
+  padding-bottom: 295px;
   background-color: #f4f4f4;
 }
 
@@ -292,8 +291,12 @@ img {
     float: none;
     width:100%;
     padding-top: 300px;
-    margin-bottom: 30px;
+    padding-bottom: 0px;
     background-color: #f4f4f4;
+  }
+
+  .pageBtn {
+    padding-bottom: 80px;
   }
 }
 
@@ -347,34 +350,10 @@ img {
   margin-right:11px;
 }
 
-/* footer 底部 */
-
-.footer{
-  position: fixed;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  height:80px;
-  background-color: #c0bcbc;
-  text-align: center;
-}
-
-.footer h4{
-  padding-top: 24px;
-  font-size: 14px;
-  color: #444444;
-}
-
-.footer p{
-  padding-top: 15px;
-  font-size: 14px;
-  color: #666666;
-}
-
 .pageBtn {
   display: flex;
   justify-content: center;
-  margin-bottom: 80px;
+
 }
 
 .pagination {
@@ -400,12 +379,34 @@ img {
   color: #f4f4f4;
 }
 
-.page-pre{
+.page-first{
   border-top-left-radius:25% ;
   border-bottom-left-radius:25% ;
 }
 
-.page-next{
+.page-last{
   border-top-right-radius:25% ;
   border-bottom-right-radius:25% ;
+}
+
+/* footer 底部 */
+
+.footer{
+  position: relative;
+  height: 80px;
+  clear: both;
+  background-color: #c0bcbc;
+  text-align: center;
+}
+
+.footer h4{
+  padding-top: 24px;
+  font-size: 14px;
+  color: #444444;
+}
+
+.footer p{
+  padding-top: 15px;
+  font-size: 14px;
+  color: #666666;
 }
