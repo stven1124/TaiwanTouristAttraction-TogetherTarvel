@@ -214,7 +214,13 @@ img {
 
 /* 左邊景點圖片 */
 
+.aside {
+  float: left;
+  height: 860px;
+}
+
 .asideImage {
+  
   position: fixed;
   z-index: -9999;
   width: 40%;
