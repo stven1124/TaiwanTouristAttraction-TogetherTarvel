@@ -77,11 +77,6 @@ img {
   color: #666666;
 }
 
-.itemempty {
-  height: 0px;
-  width: 27%;
-}
-
 /* 頂部標題LOGO，景點選項 */
 
 .header	{
@@ -303,6 +298,14 @@ img {
   flex-wrap: wrap;
   align-items: baseline;
   justify-content: space-evenly;
+}
+
+.itemempty {
+  height: 100%;
+  width: 292px;
+  padding-top:10px;
+  padding-left:16px;
+  padding-bottom: 12px;
 }
 
 @media screen and (max-width:1043px) {

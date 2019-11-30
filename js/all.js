@@ -151,7 +151,7 @@ selectorArea.innerHTML = titleStr + selectorAreaStr;
 
 function updateList(data) {
   let str = '';
-  let emptyStr= `<li class="itemempty"></li><li class="itemempty"></li><li class="itemempty"></li>`;
+  let emptyStr= `<li class="itemempty"></li><li class="itemempty"></li>`;
   data.forEach(item => {
     str += `<li>
               <iframe src="https://maps.google.com.tw/maps?f=q&hl=zh-TW&geocode=&q=${item.Py},${item.Px}&z=16&output=embed&t=" max-width="100%" height="155" style="border: 4px solid #FFFFFF;" allowfullscreen=""></iframe>
