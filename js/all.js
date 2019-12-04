@@ -4,7 +4,7 @@ const pageID = document.getElementById("pageid");
 const aside = document.querySelector('.aside');
 const selectorCity = document.querySelector('.selectorCity');
 const selectorArea = document.querySelector('.selectorArea');
-var  loader = document.querySelector(".loader");
+var loader = document.querySelector(".loader");
 let jsonData = {};
 
 fetch(URL,{method:'GET'})
@@ -12,16 +12,10 @@ fetch(URL,{method:'GET'})
   return response.json();
 }).then(data  => {
     jsonData = data.XML_Head.Infos.Info;
-    for(let i = 0; i < jsonData.length; i++){
-      if(jsonData[i].Region === null || jsonData[i].Town === null){
-        delete jsonData[i];
-      }
-    }
-    jsonData = jsonData.filter(function(e){return e});
-    paginationArrayDefault(jsonData)
+    paginationArrayDefault(jsonData);
 }).then(() => {
   loader.style.display = "none";
-});;
+});
 
 /* Pagination 分頁 */
 
@@ -29,12 +23,9 @@ var SelectorList= [];
 
 function paginationArrayDefault(jsonData) {
   const jsonDataLen = jsonData.length;
-  var selector = '臺北市';
   SelectorList.length = 0;
   for(let i = 0;i < jsonDataLen; i++){
-    if(selector == jsonData[i].Region){
       SelectorList.push(jsonData[i]);
-    }
   }
   pagination(SelectorList, 1)
 };
@@ -102,7 +93,7 @@ function pageBtn(page) {
   var lastStr = `<li class="page-item page-last" data-page="${total}">
                  <i class="fas fa-angle-double-right" data-page="${total}"></i></li>`;
   if (parseInt(page.currentPage) < 1) {
-    parseInt(page.currentPage) = 1
+    parseInt(page.currentPage) = 1;
   };
   if (parseInt(page.currentPage) <= total - 1) {
     nextStr = `<li class="page-item" data-page="${parseInt(page.currentPage) +1}">
@@ -141,7 +132,9 @@ function updateSelectorArea(e) {
   const selectorAreaArray = jsonData.filter(item => !set.has(item.Town) ? set.add(item.Town): false);
   for(let i = 0;i < selectorAreaArray.length; i++){
     if(selector == selectorAreaArray[i].Region ){
-      selectorAreaStr += `<option value="${selectorAreaArray[i].Town}">${selectorAreaArray[i].Town}</option>`;
+      if(selectorAreaArray[i].Town !== null){
+        selectorAreaStr += `<option value="${selectorAreaArray[i].Town}">${selectorAreaArray[i].Town}</option>`;
+      }
     }
   }
 selectorArea.innerHTML = titleStr + selectorAreaStr;
@@ -153,7 +146,7 @@ function updateList(data) {
   let str = '';
   let emptyStr= `<li class="itemempty"></li><li class="itemempty"></li>`;
   data.forEach(item => {
-    str += `<li>
+    str += `<li>   
               <iframe src="https://maps.google.com.tw/maps?f=q&hl=zh-TW&geocode=&q=${item.Py},${item.Px}&z=16&output=embed&t=" max-width="100%" height="155" style="border: 4px solid #FFFFFF;" allowfullscreen=""></iframe>
               <ul class="areaListBottom">
                 <h5>${item.Name}<p class="area">${item.Town}</p></h5>
